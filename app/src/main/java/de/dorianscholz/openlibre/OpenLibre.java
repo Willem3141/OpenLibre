@@ -164,7 +164,8 @@ public class OpenLibre extends Application {
             Log.i(LOG_ID, "Parsing data raw_data realm to processed_data realm.");
             realmProcessedData.beginTransaction();
             for (RawTagData rawTagData : realmRawData.where(RawTagData.class)
-                            .findAllSorted(RawTagData.DATE, Sort.ASCENDING)) {
+                            .sort(RawTagData.DATE, Sort.ASCENDING)
+                            .findAll()) {
                 realmProcessedData.copyToRealmOrUpdate(new ReadingData(rawTagData));
             }
             realmProcessedData.commitTransaction();

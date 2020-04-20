@@ -14,9 +14,9 @@ import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.Sort
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.CommonPool
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -63,14 +63,16 @@ object ExportTask {
                         Realm.getInstance(realmConfigRawData).use { realm ->
                             exportEntries<RawTagData>("raw-data", outputFormat, realm,
                                     realm.where(RawTagData::class.java)
-                                            .findAllSorted(RawTagData.DATE, Sort.ASCENDING))
+                                            .sort(RawTagData.DATE, Sort.ASCENDING)
+                                            .findAll())
                         }
 
                     ExportFragment.DataTypes.READING ->
                         Realm.getInstance(realmConfigProcessedData).use { realm ->
                             exportEntries<ReadingData>("decoded-data", outputFormat, realm,
                                     realm.where(ReadingData::class.java)
-                                            .findAllSorted(ReadingData.DATE, Sort.ASCENDING))
+                                            .sort(ReadingData.DATE, Sort.ASCENDING)
+                                            .findAll())
                         }
 
                     ExportFragment.DataTypes.GLUCOSE ->
@@ -78,7 +80,8 @@ object ExportTask {
                             exportEntries<GlucoseData>("glucose-data", outputFormat, realm,
                                     realm.where(GlucoseData::class.java)
                                             .equalTo(GlucoseData.IS_TREND_DATA, false)
-                                            .findAllSorted(GlucoseData.DATE, Sort.ASCENDING))
+                                            .sort(GlucoseData.DATE, Sort.ASCENDING)
+                                            .findAll())
                         }
                 }
             }
